@@ -1,5 +1,7 @@
 package berthet.johann.channelmessaging;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -11,19 +13,16 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.HashMap;
 
-import berthet.johann.channelmessaging.network.CustomResponse;
+import berthet.johann.channelmessaging.network.ConnectResponse;
 import berthet.johann.channelmessaging.network.WSRequestHandler;
 import berthet.johann.channelmessaging.network.onWSRequestListener;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, onWSRequestListener {
+    private static final String PREFS_ACCESS_TOKEN = "MyAccessToken";
     private EditText editTextLogin;
     private EditText editTextPassword;
-    private Button buttonValidate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +42,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         editTextLogin = (EditText) findViewById(R.id.editText);
         editTextPassword = (EditText) findViewById(R.id.editText2);
-        buttonValidate = (Button) findViewById(R.id.button);
+        Button buttonValidate = (Button) findViewById(R.id.button);
 
         buttonValidate.setOnClickListener(this);
 
@@ -88,8 +87,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onWSRequestCompleted(String response) {
         Gson gson = new Gson();
-        CustomResponse toastResponse = gson.fromJson(response, CustomResponse.class);
-        Toast.makeText(getApplicationContext(), toastResponse.response, Toast.LENGTH_SHORT).show();
+        ConnectResponse myResponse = gson.fromJson(response, ConnectResponse.class);
+        Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
+
+        SharedPreferences settings = getSharedPreferences(PREFS_ACCESS_TOKEN, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("accesstoken", myResponse.accesstoken);
+        editor.commit();
+
+        try
+        {
+            if (myResponse.code.equals("200")) {
+                Intent myIntent = new Intent(this, ChannelListActivity.class);
+                startActivity(myIntent);
+            } else {
+                Toast.makeText(getApplicationContext(), myResponse.response, Toast.LENGTH_SHORT).show();
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
