@@ -1,5 +1,6 @@
 package berthet.johann.channelmessaging;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -24,7 +25,7 @@ import berthet.johann.channelmessaging.network.onWSRequestListener;
 /**
  * Created by Johann on 08/02/2016.
  */
-public class ChannelListActivity extends AppCompatActivity implements View.OnClickListener, onWSRequestListener, AdapterView.OnItemClickListener {
+public class ChannelListActivity extends AppCompatActivity implements onWSRequestListener, AdapterView.OnItemClickListener {
     private static final String PREFS_ACCESS_TOKEN = "MyAccessToken";
     private ListView myListView;
 
@@ -48,19 +49,11 @@ public class ChannelListActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
     public void onWSRequestCompleted(String response) {
         Gson gson = new Gson();
         ChannelList myList = new ChannelList();
         myList.channels = gson.fromJson(response, ChannelList.class).channels;
         myListView.setAdapter(new ChannelAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, myList.channels));
-        //for (Channel current_channel : myList.channelList) {
-        //}
-
     }
 
     @Override
@@ -70,6 +63,9 @@ public class ChannelListActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        long channelID = myListView.getAdapter().getItemId(position);
+        Intent myIntent = new Intent(ChannelListActivity.this, ChannelActivity.class);
+        myIntent.putExtra("channelID", channelID); //Optional parameters
+        startActivity(myIntent);
     }
 }

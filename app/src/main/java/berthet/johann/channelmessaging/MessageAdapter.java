@@ -10,34 +10,30 @@ import android.widget.TextView;
 import java.util.List;
 
 import berthet.johann.channelmessaging.network.Channel;
+import berthet.johann.channelmessaging.network.Message;
 
 /**
- * Created by Johann on 08/02/2016.
+ * Created by Johann on 29/02/2016.
  */
-public class ChannelAdapter extends ArrayAdapter {
+public class MessageAdapter extends ArrayAdapter {
     private final Context context;
-    private final List<Channel> channels;
+    private final List<Message> messages;
 
-    public ChannelAdapter(Context context, int resource, List objects) {
+    public MessageAdapter(Context context, int resource, List objects) {
         super(context, resource, objects);
         this.context = context;
-        this.channels = objects;
+        this.messages = objects;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
-        TextView channelTextView = (TextView) rowView.findViewById(R.id.textViewNameChannel);
-        TextView nbUsersTextView = (TextView) rowView.findViewById(R.id.textViewNbUsers);
-        channelTextView.setText(channels.get(position).name);
-        nbUsersTextView.setText("Nombre d'utilisateurs connectés : " + channels.get(position).connectedusers);
+        TextView messageTextView = (TextView) rowView.findViewById(R.id.textViewNameChannel);
+        TextView authorTextView = (TextView) rowView.findViewById(R.id.textViewNbUsers);
+        messageTextView.setText(messages.get(position).message);
+        authorTextView.setText(messages.get(position).date);
         return rowView;
     }
 
-    @Override
-    public long getItemId(int position) {
-        return (long)channels.get(position).channelID;
-    }
 }
-
