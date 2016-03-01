@@ -45,12 +45,8 @@ public class ChannelActivity extends AppCompatActivity implements View.OnClickLi
         SharedPreferences settings = getSharedPreferences(PREFS_ACCESS_TOKEN, 0);
         myAccessToken = settings.getString("accesstoken", null);
 
-        this.refreshMessages();
-
         handler = new Handler();
-        System.out.println("entree handler");
         handler.postDelayed(DoThings, 1000);
-        System.out.println("sortie handler");
 
     }
 
@@ -58,10 +54,8 @@ public class ChannelActivity extends AppCompatActivity implements View.OnClickLi
     {
         public void run()
         {
-            System.out.println("entree run");
             refreshMessages();
             handler.postDelayed(this, 1000);
-            System.out.println("sortie run");
         }
     };
 
@@ -97,7 +91,6 @@ public class ChannelActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void refreshMessages() {
-        System.out.println("entree refresh");
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("accesstoken", myAccessToken);
         params.put("channelid", myChannelID);
@@ -105,6 +98,5 @@ public class ChannelActivity extends AppCompatActivity implements View.OnClickLi
         WSRequestHandler refreshMessageRequest = new WSRequestHandler(params, "http://www.raphaelbischof.fr/messaging/?function=getmessages", REQUEST_GET_MESSAGES);
         refreshMessageRequest.setOnWSRequestListener(this);
         refreshMessageRequest.execute();
-        System.out.println("sortie refresh");
     }
 }

@@ -27,7 +27,7 @@ public class ChannelAdapter extends ArrayAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.rowlayout, parent, false);
+        View rowView = inflater.inflate(R.layout.channelrowlayout, parent, false);
         TextView channelTextView = (TextView) rowView.findViewById(R.id.textViewNameChannel);
         TextView nbUsersTextView = (TextView) rowView.findViewById(R.id.textViewNbUsers);
         channelTextView.setText(channels.get(position).name);
