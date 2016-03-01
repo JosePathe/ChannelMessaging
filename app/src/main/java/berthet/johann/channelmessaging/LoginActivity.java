@@ -79,13 +79,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         params.put("username", myLogin);
         params.put("password", myPassword);
 
-        WSRequestHandler connectRequest = new WSRequestHandler(params, "http://www.raphaelbischof.fr/messaging/?function=connect");
+        WSRequestHandler connectRequest = new WSRequestHandler(params, "http://www.raphaelbischof.fr/messaging/?function=connect", 0);
         connectRequest.setOnWSRequestListener(this);
         connectRequest.execute();
     }
 
     @Override
-    public void onWSRequestCompleted(String response) {
+    public void onWSRequestCompleted(int requestCode, String response) {
         Gson gson = new Gson();
         ConnectResponse myResponse = gson.fromJson(response, ConnectResponse.class);
         Toast.makeText(getApplicationContext(), response, Toast.LENGTH_SHORT).show();
@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     @Override
-    public void onWSRequestError(String exception) {
+    public void onWSRequestError(int requestCode, String exception) {
         Toast.makeText(getApplicationContext(), exception, Toast.LENGTH_SHORT).show();
     }
 }

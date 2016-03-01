@@ -25,13 +25,15 @@ import javax.net.ssl.HttpsURLConnection;
  * Created by Johann on 02/02/2016.
  */
 public class WSRequestHandler extends AsyncTask<String,Integer,String> {
+    private final int requestCode;
     private ArrayList<onWSRequestListener> listeners = new ArrayList<onWSRequestListener>();
     private HashMap<String, String> hashMapParams;
     String requestURL = null;
 
-    public WSRequestHandler(HashMap<String, String> hashMapParams, String requestURL) {
+    public WSRequestHandler(HashMap<String, String> hashMapParams, String requestURL, int requestCode) {
         this.hashMapParams = hashMapParams;
         this.requestURL = requestURL;
+        this.requestCode = requestCode;
     }
 
     public void setOnWSRequestListener(onWSRequestListener listener) {
@@ -40,13 +42,13 @@ public class WSRequestHandler extends AsyncTask<String,Integer,String> {
 
     private void WSRequestCompleted(String response) {
         for (onWSRequestListener myListener:listeners) {
-            myListener.onWSRequestCompleted(response);
+            myListener.onWSRequestCompleted(requestCode, response);
         }
     }
 
     private void WSRequestError(String exception) {
         for (onWSRequestListener myListener:listeners) {
-            myListener.onWSRequestError(exception);
+            myListener.onWSRequestError(requestCode, exception);
         }
     }
 
