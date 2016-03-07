@@ -8,8 +8,17 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="berthet.johann.channelmessaging.ChannelListActivity">
 
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:name="berthet.johann.channelmessaging.fragment.ChannelListFragment"
+        android:id="@+id/channelListFragment"
+        tools:layout="@layout/fragment_listchannel" />
+
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="265dp"
         android:id="@+id/channelListView" />
+
 </LinearLayout>
