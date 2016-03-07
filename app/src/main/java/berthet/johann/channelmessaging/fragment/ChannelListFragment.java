@@ -25,13 +25,12 @@ import berthet.johann.channelmessaging.network.onWSRequestListener;
  */
 public class ChannelListFragment extends Fragment implements onWSRequestListener {
     private static final String PREFS_ACCESS_TOKEN = "MyAccessToken";
-
     private ListView lvFragment;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_listchannel,container);
-        lvFragment = (ListView)v.findViewById(R.id.lvFragment);
+        lvFragment = (ListView)v.findViewById(R.id.lvFragment_channel);
         lvFragment.setOnItemClickListener((ChannelListActivity)getActivity());
 
         SharedPreferences settings = getContext().getSharedPreferences(PREFS_ACCESS_TOKEN, 0);

@@ -1,67 +1,87 @@
-package berthet.johann.channelmessaging;
+package berthet.johann.channelmessaging.fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
-public class ChannelActivity extends AppCompatActivity {
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+
+import berthet.johann.channelmessaging.MessageAdapter;
+import berthet.johann.channelmessaging.R;
+import berthet.johann.channelmessaging.network.MessageList;
+import berthet.johann.channelmessaging.network.WSRequestHandler;
+import berthet.johann.channelmessaging.network.onWSRequestListener;
+
+/**
+ * Created by Johann on 07/03/2016.
+ */
+public class MessageListFragment extends Fragment implements View.OnClickListener, onWSRequestListener {
     private static final String PREFS_ACCESS_TOKEN = "MyAccessToken";
     private static final int REQUEST_SEND_MESSAGES = 1;
     private static final int REQUEST_GET_MESSAGES = 2;
 
+    private ListView lvFragment;
     private String myAccessToken;
     private String myChannelID;
-    private ListView myListView;
     private EditText myInputText;
     private Button mySendButton;
     private Handler handler;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_channel);
-        /*myListView = (ListView)findViewById(R.id.messageListView);
-        myInputText = (EditText)findViewById(R.id.inputEditText);
-        mySendButton = (Button)findViewById(R.id.sendButton);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_listmessage,container);
+        lvFragment = (ListView)v.findViewById(R.id.lvFragment_message);
+        myInputText = (EditText)v.findViewById(R.id.inputEditText);
+        mySendButton = (Button)v.findViewById(R.id.sendButton);
         mySendButton.setOnClickListener(this);
 
-        long channelID = (long)getIntent().getSerializableExtra("channelID");
+        long channelID = getActivity().getIntent().getLongExtra("channelID", 1);
         myChannelID = String.valueOf(channelID);
 
-        SharedPreferences settings = getSharedPreferences(PREFS_ACCESS_TOKEN, 0);
+        SharedPreferences settings = getContext().getSharedPreferences(PREFS_ACCESS_TOKEN, 0);
         myAccessToken = settings.getString("accesstoken", null);
 
         handler = new Handler();
-        handler.postDelayed(DoThings, 1000);*/
+        handler.postDelayed(RunnableRefreshingMessage, 1000);
 
+        return v;
     }
-/*
-    final Runnable DoThings = new Runnable()
+
+    final Runnable RunnableRefreshingMessage = new Runnable()
     {
         public void run()
         {
-            refreshMessages();
+            refreshMessages(0);
             handler.postDelayed(this, 1000);
         }
     };
 
     @Override
     public void onWSRequestCompleted(int requestCode, String response) {
+        System.out.println("request completed");
         if (requestCode == REQUEST_GET_MESSAGES) {
             Gson gson = new Gson();
             MessageList myList = new MessageList();
             myList.messages = gson.fromJson(response, MessageList.class).messages;
-            myListView.setAdapter(new MessageAdapter(getApplicationContext(), android.R.layout.simple_list_item_1, myList.messages));
+            if (getContext() != null) {
+                lvFragment.setAdapter(new MessageAdapter(getContext(), android.R.layout.simple_list_item_1, myList.messages));
+            }
         }
 
     }
 
     @Override
     public void onWSRequestError(int requestCode, String exception) {
-        Toast.makeText(getApplicationContext(), exception, Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), exception, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -79,14 +99,17 @@ public class ChannelActivity extends AppCompatActivity {
         sendMessageRequest.execute();
     }
 
-    public void refreshMessages() {
+    public void refreshMessages(long id) {
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("accesstoken", myAccessToken);
+        if (id != 0) {
+            myChannelID = String.valueOf(id);
+        }
         params.put("channelid", myChannelID);
 
         WSRequestHandler refreshMessageRequest = new WSRequestHandler(params, "http://www.raphaelbischof.fr/messaging/?function=getmessages", REQUEST_GET_MESSAGES);
         refreshMessageRequest.setOnWSRequestListener(this);
         refreshMessageRequest.execute();
     }
-    */
+
 }
