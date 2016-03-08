@@ -51,7 +51,9 @@ public class ChannelListFragment extends Fragment implements onWSRequestListener
         Gson gson = new Gson();
         ChannelList myList = new ChannelList();
         myList.channels = gson.fromJson(response, ChannelList.class).channels;
-        lvFragment.setAdapter(new ChannelAdapter(getContext(), android.R.layout.simple_list_item_1, myList.channels));
+        if (getContext() != null) {
+            lvFragment.setAdapter(new ChannelAdapter(getContext(), android.R.layout.simple_list_item_1, myList.channels));
+        }
     }
 
     @Override
