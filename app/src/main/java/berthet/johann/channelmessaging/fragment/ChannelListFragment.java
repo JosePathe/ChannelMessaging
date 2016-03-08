@@ -59,4 +59,8 @@ public class ChannelListFragment extends Fragment implements onWSRequestListener
         Toast.makeText(getContext(), exception, Toast.LENGTH_SHORT).show();
     }
 
+    public void search(String filter){
+        ((ChannelAdapter) lvFragment.getAdapter()).sort(filter);
+    }
+
 }
