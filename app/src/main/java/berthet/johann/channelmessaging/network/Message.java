@@ -1,8 +1,5 @@
 package berthet.johann.channelmessaging.network;
 
-import java.net.URL;
-import java.util.Date;
-
 /**
  * Created by Johann on 29/02/2016.
  */
@@ -11,4 +8,7 @@ public class Message {
     public String message;
     public String date;
     public String imageUrl;
+    public Double latitude;
+    public Double longitude;
+    public String username;
 }

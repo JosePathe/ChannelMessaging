@@ -3,4 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_test">TestActivity</string>
     <string name="title_activity_channel">ChannelActivity</string>
+    <string name="title_activity_map">Map</string>
+    <string name="google_app_id">calm-athlete-124415</string>
 </resources>

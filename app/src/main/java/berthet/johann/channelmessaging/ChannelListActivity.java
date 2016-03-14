@@ -17,7 +17,7 @@ import berthet.johann.channelmessaging.fragment.MessageListFragment;
 /**
  * Created by Johann on 08/02/2016.
  */
-public class ChannelListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
+public class ChannelListActivity extends GPSActivity implements AdapterView.OnItemClickListener, SearchView.OnQueryTextListener {
     private MenuItem searchMenuItem;
 
     @Override
