@@ -3,10 +3,12 @@ package berthet.johann.channelmessaging;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -44,11 +46,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));*/
 
         String username = getIntent().getStringExtra("username");
-        int latitude = (int) getIntent().getDoubleExtra("latitude", 0);
-        int longitude = (int) getIntent().getDoubleExtra("longitude", 0);
+        Double latitude = getIntent().getDoubleExtra("latitude", 0);
+        Double longitude = getIntent().getDoubleExtra("longitude", 0);
 
         LatLng user = new LatLng(latitude, longitude);
+        CameraPosition cameraPosition = new CameraPosition(user, 14, 0, 0);
         mMap.addMarker(new MarkerOptions().position(user).title(username));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(user));
     }
 }
