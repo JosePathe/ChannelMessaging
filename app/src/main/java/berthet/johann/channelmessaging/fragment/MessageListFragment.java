@@ -1,7 +1,10 @@
 package berthet.johann.channelmessaging.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -49,6 +52,7 @@ public class MessageListFragment extends Fragment implements View.OnClickListene
     private Handler handler;
 
     private ArrayList<Message> messagesList;
+    private BroadcastReceiver mMessageReceiver;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_listmessage,container);
@@ -60,18 +64,44 @@ public class MessageListFragment extends Fragment implements View.OnClickListene
 
         messagesList = new ArrayList<Message>();
 
-        long channelID = getActivity().getIntent().getLongExtra("channelID", 1);
-        myChannelID = String.valueOf(channelID);
-
         SharedPreferences settings = getContext().getSharedPreferences(PREFS_ACCESS_TOKEN, 0);
         myAccessToken = settings.getString("accesstoken", null);
 
+        mMessageReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                abortBroadcast();
+                long channelID = getActivity().getIntent().getLongExtra("channelID", 1);
+                refreshMessages(channelID);
+            }
+        };
+
+        long channelID = getActivity().getIntent().getLongExtra("channelID", 1);
+        myChannelID = String.valueOf(channelID);
+        refreshMessages(channelID);
+
+        /*
         handler = new Handler();
-        handler.postDelayed(RunnableRefreshingMessage, 1000);
+        handler.postDelayed(RunnableRefreshingMessage, 1000);*/
 
         return v;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        IntentFilter intentFilter =  new IntentFilter("com.google.android.c2dm.intent.RECEIVE");
+        intentFilter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        getActivity().registerReceiver(mMessageReceiver, intentFilter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivity().unregisterReceiver(mMessageReceiver);
+    }
+
+    /*
     final Runnable RunnableRefreshingMessage = new Runnable()
     {
         public void run()
@@ -79,7 +109,7 @@ public class MessageListFragment extends Fragment implements View.OnClickListene
             refreshMessages(0);
             handler.postDelayed(this, 1000);
         }
-    };
+    };*/
 
     @Override
     public void onWSRequestCompleted(int requestCode, String response) {
@@ -113,9 +143,9 @@ public class MessageListFragment extends Fragment implements View.OnClickListene
         params.put("channelid", myChannelID);
         params.put("message", myMessage);
 
-        if (GPSActivity.getCurrentLocation() != null ) {
-            String latitude = String.valueOf(GPSActivity.mCurrentLocation.getLatitude());
-            String longitude = String.valueOf(GPSActivity.mCurrentLocation.getLongitude());
+        if ( ((GPSActivity) getActivity()).getCurrentLocation() != null ) {
+            String latitude = String.valueOf(((GPSActivity) getActivity()).mCurrentLocation.getLatitude());
+            String longitude = String.valueOf(((GPSActivity) getActivity()).mCurrentLocation.getLongitude());
             params.put("latitude", latitude);
             params.put("longitude", longitude);
         }

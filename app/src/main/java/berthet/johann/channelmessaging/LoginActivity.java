@@ -20,7 +20,7 @@ import berthet.johann.channelmessaging.network.ConnectResponse;
 import berthet.johann.channelmessaging.network.WSRequestHandler;
 import berthet.johann.channelmessaging.network.onWSRequestListener;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, onWSRequestListener {
+public class LoginActivity extends NotificationActivity implements View.OnClickListener, onWSRequestListener {
     private static final String PREFS_ACCESS_TOKEN = "MyAccessToken";
     private EditText editTextLogin;
     private EditText editTextPassword;
@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HashMap<String, String> params = new HashMap<String, String>();
         params.put("username", myLogin);
         params.put("password", myPassword);
+        params.put("registrationid",this.getRegistrationId());
 
         WSRequestHandler connectRequest = new WSRequestHandler(params, "http://www.raphaelbischof.fr/messaging/?function=connect", 0);
         connectRequest.setOnWSRequestListener(this);

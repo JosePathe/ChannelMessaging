@@ -21,7 +21,7 @@ import com.google.android.gms.location.LocationServices;
  */
 public class GPSActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, LocationListener {
     private static final int REQUEST_WRITE_STORAGE = 112;
-    public static Location mCurrentLocation;
+    public Location mCurrentLocation;
     GoogleApiClient mGoogleApiClient;
     Boolean mRequestingLocationUpdates = false;
     LocationRequest mLocationRequest = new LocationRequest();
@@ -138,7 +138,7 @@ public class GPSActivity extends AppCompatActivity implements GoogleApiClient.Co
         }
     }
 
-    public static Location getCurrentLocation(){
+    public Location getCurrentLocation(){
         return mCurrentLocation;
     }
 }
